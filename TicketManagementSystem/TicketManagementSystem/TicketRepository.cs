@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace TicketManagementSystem
 {
-    public static class TicketRepository
+    public class TicketRepository : ITicketRepository
     {
-        private static readonly List<Ticket> Tickets = new List<Ticket>();
+        private readonly List<Ticket> Tickets = new();
 
-        public static int CreateTicket(Ticket ticket)
+        public int CreateTicket(Ticket ticket)
         {
             // Assume that the implementation of this method does not need to change.
             var currentHighestTicket = Tickets.Any() ? Tickets.Max(i => i.Id) : 0;
@@ -19,7 +19,7 @@ namespace TicketManagementSystem
             return id;
         }
 
-        public static void UpdateTicket(Ticket ticket)
+        public void UpdateTicket(Ticket ticket)
         {
             // Assume that the implementation of this method does not need to change.
             var outdatedTicket = Tickets.FirstOrDefault(t => t.Id == ticket.Id);
@@ -31,7 +31,7 @@ namespace TicketManagementSystem
             }
         }
 
-        public static Ticket GetTicket(int id)
+        public Ticket GetTicket(int id)
         {
             // Assume that the implementation of this method does not need to change.
             return Tickets.FirstOrDefault(a => a.Id == id);
