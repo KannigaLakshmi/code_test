@@ -8,17 +8,19 @@ namespace TicketManagementSystem
         {
             Console.WriteLine("Ticket Service Test Harness");
 
-            var service = new TicketService();
+            var service = new TicketService(new TicketRepository());
 
+            Console.WriteLine("Creating new ticket.");
             var ticketId = service.CreateTicket(
                 "System Crash",
                 Priority.Medium,
-                "Johan",
+                "jsmith",
                 "The system crashed when user performed a search",
                 DateTime.UtcNow,
                 true);
 
-            service.AssignTicket(ticketId, "Michael");
+            Console.WriteLine("Assigning ticket to sberg");
+            service.AssignTicket(ticketId, "sberg");
 
             Console.WriteLine("Done");
         }

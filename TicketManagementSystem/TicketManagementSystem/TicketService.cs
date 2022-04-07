@@ -2,12 +2,18 @@
 using System.Configuration;
 using System.IO;
 using System.Text.Json;
-using EmailService;
 
 namespace TicketManagementSystem
 {
     public class TicketService
     {
+        ITicketRepository ticketRepository;
+
+        public TicketService(ITicketRepository ticketRepository)
+        {
+            this.ticketRepository = ticketRepository;
+        }
+
         public int CreateTicket(string t, Priority p, string assignedTo, string desc, DateTime d, bool isPayingCustomer)
         {
             // Check if t or desc are null or if they are invalid and throw exception
@@ -17,12 +23,10 @@ namespace TicketManagementSystem
             }
 
             User user = null;
-            using (var ur = new UserRepository())
+            var ur = new UserRepository();
+            if (assignedTo != null)
             {
-                if (assignedTo != null)
-                {
-                    user = ur.GetUser(assignedTo);
-                }
+                user = ur.GetUser(assignedTo);
             }
 
             if (user == null)
@@ -30,22 +34,23 @@ namespace TicketManagementSystem
                 throw new UnknownUserException("User " + assignedTo + " not found");
             }
 
-            var priorityRaised = false;
+            var priorityyRaised = false;
             if (d < DateTime.UtcNow - TimeSpan.FromHours(1))
             {
                 if (p == Priority.Low)
                 {
                     p = Priority.Medium;
-                    priorityRaised = true;
+                    priorityyRaised = true;
                 }
                 else if (p == Priority.Medium)
                 {
                     p = Priority.High;
-                    priorityRaised = true;
+                    priorityyRaised = true;
                 }
             }
 
-            if ((t.Contains("Crash") || t.Contains("Important") || t.Contains("Failure")) && !priorityRaised)
+            // If the title contains some special worrds and the priority has not yet been raised, raise it here.
+            if ((t.Contains("Crash") || t.Contains("Important") || t.Contains("Failure")) && !priorityyRaised)
             {
                 if (p == Priority.Low)
                 {
@@ -55,12 +60,6 @@ namespace TicketManagementSystem
                 {
                     p = Priority.High;
                 }
-            }
-
-            if (p == Priority.High)
-            {
-                var emailService = new EmailServiceProxy();
-                emailService.SendEmailToAdministrator(t, assignedTo);
             }
 
             double price = 0;
@@ -79,6 +78,7 @@ namespace TicketManagementSystem
                 }
             }
 
+            // Create the tickket
             var ticket = new Ticket()
             {
                 Title = t,
@@ -90,7 +90,7 @@ namespace TicketManagementSystem
                 AccountManager = accountManager
             };
 
-            var id = TicketRepository.CreateTicket(ticket);
+            var id = ticketRepository.CreateTicket(ticket);
 
             // Return the id
             return id;
@@ -99,12 +99,10 @@ namespace TicketManagementSystem
         public void AssignTicket(int id, string username)
         {
             User user = null;
-            using (var ur = new UserRepository())
+            var ur = new UserRepository();
+            if (username != null)
             {
-                if (username != null)
-                {
-                    user = ur.GetUser(username);
-                }
+                user = ur.GetUser(username);
             }
 
             if (user == null)
@@ -112,7 +110,7 @@ namespace TicketManagementSystem
                 throw new UnknownUserException("User not found");
             }
 
-            var ticket = TicketRepository.GetTicket(id);
+            var ticket = ticketRepository.GetTicket(id);
 
             if (ticket == null)
             {
@@ -121,7 +119,7 @@ namespace TicketManagementSystem
 
             ticket.AssignedUser = user;
 
-            TicketRepository.UpdateTicket(ticket);
+            ticketRepository.UpdateTicket(ticket);
         }
 
         private void WriteTicketToFile(Ticket ticket)
