@@ -23,12 +23,10 @@ namespace TicketManagementSystem
             }
 
             User user = null;
-            using (var ur = new UserRepository())
+            var ur = new UserRepository();
+            if (assignedTo != null)
             {
-                if (assignedTo != null)
-                {
-                    user = ur.GetUser(assignedTo);
-                }
+                user = ur.GetUser(assignedTo);
             }
 
             if (user == null)
@@ -101,12 +99,10 @@ namespace TicketManagementSystem
         public void AssignTicket(int id, string username)
         {
             User user = null;
-            using (var ur = new UserRepository())
+            var ur = new UserRepository();
+            if (username != null)
             {
-                if (username != null)
-                {
-                    user = ur.GetUser(username);
-                }
+                user = ur.GetUser(username);
             }
 
             if (user == null)

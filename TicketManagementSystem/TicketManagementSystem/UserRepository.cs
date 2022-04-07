@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace TicketManagementSystem
 {
-    public class UserRepository : IDisposable
+    public class UserRepository
     {
         private readonly List<User> users = new()
         {
@@ -21,11 +21,6 @@ namespace TicketManagementSystem
         {
             // Assume this method does not need to change.
             return GetUser("sberg");
-        }
-
-        public void Dispose()
-        {
-            // Free up resources
         }
     }
 }
