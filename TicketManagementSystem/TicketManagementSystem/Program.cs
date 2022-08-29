@@ -8,7 +8,7 @@ namespace TicketManagementSystem
         {
             Console.WriteLine("Ticket Service Test Harness");
 
-            var service = new TicketService(new TicketRepository());
+            var service = new TicketService(new TicketRepository(), new UserRepository());
 
             Console.WriteLine("Creating new ticket.");
             var ticketId = service.CreateTicket(

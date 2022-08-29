@@ -10,13 +10,12 @@ namespace TicketManagementSystem
         public int CreateTicket(Ticket ticket)
         {
             // Assume that the implementation of this method does not need to change.
-            var currentHighestTicket = Tickets.Any() ? Tickets.Max(i => i.Id) : 0;
-            var id = currentHighestTicket + 1;
-            ticket.Id = id;
-
+            var currentHighestTicket = Tickets.Any() ? Tickets.Max(t => t.Id) : 0;
+            ticket.Id = currentHighestTicket + 1;
+             
             Tickets.Add(ticket);
 
-            return id;
+            return ticket.Id;
         }
 
         public void UpdateTicket(Ticket ticket)
@@ -29,12 +28,13 @@ namespace TicketManagementSystem
                 Tickets.Remove(outdatedTicket);
                 Tickets.Add(ticket);
             }
+
         }
 
         public Ticket GetTicket(int id)
         {
             // Assume that the implementation of this method does not need to change.
-            return Tickets.FirstOrDefault(a => a.Id == id);
+            return Tickets.FirstOrDefault(t => t.Id == id);
         }
     }
 }

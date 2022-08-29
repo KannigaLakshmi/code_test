@@ -8,12 +8,15 @@ namespace TicketManagementSystem.Test
     {
         private TicketService ticketService;
         private Mock<ITicketRepository> ticketRepositoryMock;
-        
+        private Mock<UserRepository> userRepositoryMock;
+
+
         [SetUp]
         public void Setup()
         {
             ticketRepositoryMock = new Mock<ITicketRepository>();
-            ticketService = new TicketService(ticketRepositoryMock.Object);
+            userRepositoryMock = new Mock<UserRepository>();
+            ticketService = new TicketService(ticketRepositoryMock.Object, userRepositoryMock.Object);
         }
 
         [Test]
@@ -37,8 +40,8 @@ namespace TicketManagementSystem.Test
                 t.Title == title && 
                 t.Priority == Priority.High && 
                 t.Description == description &&
-                t.AssignedUser.Username == assignedTo && 
-                t.Created == when)));
+                t.AssignedUser.UserName == assignedTo && 
+                t.CreatedDateTime == when)));
         }
     }
 }

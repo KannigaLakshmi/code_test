@@ -15,8 +15,8 @@ namespace TicketManagementSystem
 
         public User AccountManager { get; set; }
 
-        public DateTime Created { get; set; }
+        public DateTime CreatedDateTime { get; set; }
 
-        public double PriceDollars { get; set; }
+        public double PriceInDollars { get; set; }
     }
 }

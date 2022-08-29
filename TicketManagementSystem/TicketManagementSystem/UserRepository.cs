@@ -4,17 +4,16 @@ using System.Linq;
 
 namespace TicketManagementSystem
 {
-    public class UserRepository
+    public class UserRepository 
     {
         private readonly List<User> users = new()
         {
-            new() { FirstName = "John", LastName = "Smith", Username = "jsmith" },
-            new() { FirstName = "Sarah", LastName = "Berg", Username = "sberg" }
+            new() { FirstName = "John", LastName = "Smith", UserName = "jsmith" },
+            new() { FirstName = "Sarah", LastName = "Berg", UserName = "sberg" }
         };
-
-        public User GetUser(string username)
+        public User GetUser(string userName)
         {
-            return users.FirstOrDefault(a => a.Username == username);
+            return users.FirstOrDefault(user => user.UserName == userName);
         }
 
         public User GetAccountManager()
